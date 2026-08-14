@@ -1,449 +1,1149 @@
-# Jogo-de-luta-simples-
-Apenas um jogo de luta simples 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 <title>Blue vs Red</title>
 
 <style>
+
 * {
     box-sizing: border-box;
-    image-rendering: pixelated;
+    user-select: none;
+    touch-action: none;
 }
 
 body {
     margin: 0;
-    background: #111;
-    color: white;
-    font-family: monospace;
     overflow: hidden;
-    text-align: center;
+    background: #111;
+    font-family: monospace;
 }
+
+/* ================= MENU ================= */
 
 #menu {
     position: fixed;
     inset: 0;
-    background: #151515;
+    z-index: 1000;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 10;
+
+    background: #151515;
+    color: white;
 }
 
 #menu h1 {
-    font-size: 45px;
-    margin-bottom: 30px;
+    font-size: 42px;
+    text-align: center;
+}
+
+#menu p {
+    font-size: 20px;
 }
 
 #start {
-    background: #22aa55;
-    border: 4px solid white;
+    padding: 18px 45px;
+    margin-top: 20px;
+
+    background: #159447;
     color: white;
-    padding: 15px 40px;
-    font-size: 25px;
+
+    border: 4px solid white;
+    border-radius: 10px;
+
+    font-size: 24px;
     font-family: monospace;
-    cursor: pointer;
 }
+
+/* ================= JOGO ================= */
 
 #game {
     display: none;
-    width: 100vw;
-    height: 100vh;
-    position: relative;
-    background:
-        linear-gradient(#55aadd 0 65%, #26752d 65% 100%);
+
+    position: fixed;
+    inset: 0;
+
+    background: #65b9e5;
 }
 
-/* Barras de vida */
+/* ================= VIDA ================= */
 
-.health {
+.healthBox {
     position: absolute;
     top: 20px;
+
     width: 35%;
-    height: 30px;
-    background: #333;
+    height: 32px;
+
+    background: #222;
     border: 4px solid white;
+
+    z-index: 50;
 }
 
 #blueHealthBox {
-    left: 5%;
+    left: 4%;
 }
 
 #redHealthBox {
-    right: 5%;
+    right: 4%;
 }
 
-.healthBar {
+#blueHealth,
+#redHealth {
     height: 100%;
     width: 100%;
 }
 
 #blueHealth {
-    background: #168cff;
+    background: #008cff;
 }
 
 #redHealth {
-    background: #ff2222;
+    background: #ff2020;
 }
 
-.name {
-    position: absolute;
-    top: -25px;
-    font-size: 18px;
-}
-
-#blueName {
-    left: 0;
-}
-
-#redName {
-    right: 0;
-}
-
-/* Arena */
+/* ================= ARENA ================= */
 
 #arena {
     position: absolute;
-    left: 5%;
-    right: 5%;
-    top: 15%;
-    bottom: 20%;
-    border: 5px solid #222;
+
+    left: 4%;
+    right: 4%;
+
+    top: 14%;
+    bottom: 27%;
+
     overflow: hidden;
+
+    border: 5px solid #222;
+
+    background:
+    linear-gradient(
+        #73c5ec 0%,
+        #73c5ec 65%,
+        #59a63d 65%,
+        #59a63d 100%
+    );
 }
+
+/* ================= JOGADORES ================= */
 
 .player {
     position: absolute;
+
     width: 55px;
     height: 55px;
+
     border-radius: 50%;
+
     border: 5px solid #111;
 }
 
 #blue {
     background: #008cff;
-    left: 20%;
+
+    left: 15%;
     top: 50%;
 }
 
 #red {
-    background: #ff2222;
-    left: 75%;
+    background: #ff2020;
+
+    left: 80%;
     top: 50%;
 }
 
-/* Joysticks */
+/* ================= BOTÕES DE CONTROLE ================= */
 
-.joystick {
+/*
+   CONTROLE AZUL
+*/
+
+#blueControls {
     position: absolute;
-    bottom: 25px;
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: #444;
-    border: 5px solid #aaa;
-    touch-action: none;
-}
 
-#blueJoystick {
     left: 25px;
+    bottom: 20px;
+
+    width: 140px;
+    height: 210px;
+
+    z-index: 100;
 }
 
-#redJoystick {
-    right: 25px;
-}
+/*
+   CONTROLE VERMELHO
+*/
 
-.stick {
+#redControls {
     position: absolute;
-    width: 55px;
-    height: 55px;
-    background: #888;
-    border: 4px solid white;
-    border-radius: 50%;
-    left: 32px;
-    top: 32px;
+
+    right: 25px;
+    bottom: 20px;
+
+    width: 140px;
+    height: 210px;
+
+    z-index: 100;
 }
 
-/* Ataques */
+/* ================= ATAQUE ================= */
+
+/*
+   Agora o ataque fica
+   EM CIMA do joystick.
+*/
 
 .attack {
     position: absolute;
-    bottom: 60px;
-    width: 70px;
-    height: 70px;
+
+    top: 0;
+
+    width: 75px;
+    height: 75px;
+
     border-radius: 50%;
+
     border: 4px solid white;
+
     color: white;
-    font-size: 30px;
-    font-family: monospace;
+
+    font-size: 28px;
+
+    z-index: 110;
 }
 
 #blueAttack {
-    left: 180px;
+    left: 32px;
     background: #087cff;
 }
 
 #redAttack {
-    right: 180px;
-    background: #ee2222;
+    left: 32px;
+    background: #e71919;
 }
 
-#message {
+/* ================= JOYSTICK ================= */
+
+.joystick {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 45px;
-    display: none;
-    background: #111;
-    border: 5px solid white;
-    padding: 20px;
+
+    left: 7px;
+    bottom: 0;
+
+    width: 125px;
+    height: 125px;
+
+    border-radius: 50%;
+
+    background: rgba(40,40,40,0.85);
+
+    border: 5px solid #aaa;
+
+    touch-action: none;
 }
+
+.stick {
+    position: absolute;
+
+    width: 55px;
+    height: 55px;
+
+    left: 30px;
+    top: 30px;
+
+    border-radius: 50%;
+
+    background: #999;
+
+    border: 4px solid white;
+
+    pointer-events: none;
+}
+
+/* ================= PAUSA ================= */
+
+#pauseButton,
+#restartButton {
+    position: absolute;
+
+    top: 65px;
+
+    z-index: 200;
+
+    padding: 10px 18px;
+
+    border: 3px solid white;
+    border-radius: 8px;
+
+    color: white;
+
+    font-family: monospace;
+    font-size: 18px;
+}
+
+#pauseButton {
+    left: 50%;
+
+    transform: translateX(-110%);
+
+    background: #555;
+}
+
+#restartButton {
+    left: 50%;
+
+    transform: translateX(10%);
+
+    background: #b52a2a;
+}
+
+/* ================= PAUSADO ================= */
+
+#pauseScreen {
+    display: none;
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 300;
+
+    background: rgba(0,0,0,0.65);
+
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+
+    font-size: 45px;
+}
+
+/* ================= VITÓRIA ================= */
+
+#message {
+    display: none;
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    padding: 25px;
+
+    background: #111;
+
+    color: white;
+
+    border: 5px solid white;
+
+    font-size: 35px;
+
+    text-align: center;
+
+    z-index: 500;
+}
+
 </style>
 </head>
 
 <body>
 
+
+<!-- ================= MENU ================= -->
+
 <div id="menu">
+
     <h1>🔵 BLUE VS RED 🔴</h1>
-    <button id="start">▶ COMEÇAR JOGO</button>
+
+    <p>Jogo de luta 2D</p>
+
+    <p>Créditos: <b>Raphael</b></p>
+
+    <button id="start">
+        ▶ COMEÇAR JOGO
+    </button>
+
 </div>
+
+
+<!-- ================= JOGO ================= -->
 
 <div id="game">
 
-    <div id="blueHealthBox" class="health">
-        <span id="blueName" class="name">BLUE</span>
-        <div id="blueHealth" class="healthBar"></div>
+
+    <!-- VIDA -->
+
+    <div id="blueHealthBox" class="healthBox">
+        <div id="blueHealth"></div>
     </div>
 
-    <div id="redHealthBox" class="health">
-        <span id="redName" class="name">RED</span>
-        <div id="redHealth" class="healthBar"></div>
+    <div id="redHealthBox" class="healthBox">
+        <div id="redHealth"></div>
     </div>
+
+
+    <!-- PAUSA -->
+
+    <button id="pauseButton">
+        ⏸ PAUSAR
+    </button>
+
+    <button id="restartButton">
+        🔄 REINICIAR
+    </button>
+
+
+    <!-- ARENA -->
 
     <div id="arena">
+
         <div id="blue" class="player"></div>
+
         <div id="red" class="player"></div>
 
         <div id="message"></div>
+
     </div>
 
-    <!-- Joystick azul -->
-    <div id="blueJoystick" class="joystick">
-        <div class="stick"></div>
+
+    <!-- ================= CONTROLE AZUL ================= -->
+
+    <div id="blueControls">
+
+        <!-- ATAQUE AZUL EM CIMA -->
+
+        <button id="blueAttack" class="attack">
+            👊
+        </button>
+
+        <!-- JOYSTICK AZUL -->
+
+        <div id="blueJoystick" class="joystick">
+
+            <div class="stick"></div>
+
+        </div>
+
     </div>
 
-    <!-- Ataque azul -->
-    <button id="blueAttack" class="attack">👊</button>
 
-    <!-- Ataque vermelho -->
-    <button id="redAttack" class="attack">👊</button>
+    <!-- ================= CONTROLE VERMELHO ================= -->
 
-    <!-- Joystick vermelho -->
-    <div id="redJoystick" class="joystick">
-        <div class="stick"></div>
+    <div id="redControls">
+
+        <!-- ATAQUE VERMELHO EM CIMA -->
+
+        <button id="redAttack" class="attack">
+            👊
+        </button>
+
+        <!-- JOYSTICK VERMELHO -->
+
+        <div id="redJoystick" class="joystick">
+
+            <div class="stick"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TELA DE PAUSA -->
+
+    <div id="pauseScreen">
+        ⏸ PAUSADO
     </div>
 
 </div>
 
+
 <script>
-const startButton = document.getElementById("start");
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
 const menu = document.getElementById("menu");
 const game = document.getElementById("game");
 
-const blue = document.getElementById("blue");
-const red = document.getElementById("red");
+const startButton =
+document.getElementById("start");
 
-const blueHealth = document.getElementById("blueHealth");
-const redHealth = document.getElementById("redHealth");
+const pauseButton =
+document.getElementById("pauseButton");
 
-const message = document.getElementById("message");
+const restartButton =
+document.getElementById("restartButton");
+
+const pauseScreen =
+document.getElementById("pauseScreen");
+
+const blue =
+document.getElementById("blue");
+
+const red =
+document.getElementById("red");
+
+const blueHealth =
+document.getElementById("blueHealth");
+
+const redHealth =
+document.getElementById("redHealth");
+
+const message =
+document.getElementById("message");
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+let playing = false;
+
+let paused = false;
+
+
+/* VIDA */
 
 let blueHP = 100;
 let redHP = 100;
 
-let blueX = 20;
+
+/* POSIÇÕES */
+
+let blueX = 15;
 let blueY = 50;
 
-let redX = 75;
+let redX = 80;
 let redY = 50;
 
-let gameRunning = false;
 
-const speed = 0.7;
+/* VELOCIDADE */
 
-/* Começar */
+const SPEED = 0.9;
 
-startButton.onclick = () => {
+
+/* =====================================================
+   COMEÇAR
+===================================================== */
+
+startButton.addEventListener("click", function() {
+
     menu.style.display = "none";
+
     game.style.display = "block";
-    gameRunning = true;
-};
 
-/* Atualizar personagens */
+    playing = true;
 
-function updatePlayers() {
-    blue.style.left = blueX + "%";
-    blue.style.top = blueY + "%";
+    paused = false;
 
-    red.style.left = redX + "%";
-    red.style.top = redY + "%";
-}
+    update();
 
-/* Controle por teclado
-   Azul = WASD
-   Vermelho = setas
-*/
-
-document.addEventListener("keydown", e => {
-
-    if (!gameRunning) return;
-
-    // Azul
-    if (e.key === "w") blueY -= speed;
-    if (e.key === "s") blueY += speed;
-    if (e.key === "a") blueX -= speed;
-    if (e.key === "d") blueX += speed;
-
-    // Vermelho
-    if (e.key === "ArrowUp") redY -= speed;
-    if (e.key === "ArrowDown") redY += speed;
-    if (e.key === "ArrowLeft") redX -= speed;
-    if (e.key === "ArrowRight") redX += speed;
-
-    limitarPosicoes();
-    updatePlayers();
 });
 
-/* Ataque */
 
-function attack(player) {
+/* =====================================================
+   PAUSAR
+===================================================== */
 
-    if (!gameRunning) return;
+pauseButton.addEventListener("click", function() {
 
-    let distance = Math.sqrt(
-        Math.pow(blueX - redX, 2) +
-        Math.pow(blueY - redY, 2)
+    if (!playing)
+        return;
+
+
+    paused = !paused;
+
+
+    if (paused) {
+
+        pauseButton.textContent =
+            "▶ CONTINUAR";
+
+        pauseScreen.style.display =
+            "flex";
+
+    }
+
+    else {
+
+        pauseButton.textContent =
+            "⏸ PAUSAR";
+
+        pauseScreen.style.display =
+            "none";
+
+    }
+
+});
+
+
+/* =====================================================
+   REINICIAR
+===================================================== */
+
+restartButton.addEventListener("click", function() {
+
+    blueHP = 100;
+    redHP = 100;
+
+
+    blueX = 15;
+    blueY = 50;
+
+
+    redX = 80;
+    redY = 50;
+
+
+    playing = true;
+
+    paused = false;
+
+
+    blueHealth.style.width =
+        "100%";
+
+    redHealth.style.width =
+        "100%";
+
+
+    message.style.display =
+        "none";
+
+
+    pauseScreen.style.display =
+        "none";
+
+
+    pauseButton.textContent =
+        "⏸ PAUSAR";
+
+
+    update();
+
+});
+
+
+/* =====================================================
+   ATUALIZAR
+===================================================== */
+
+function update() {
+
+    blue.style.left =
+        blueX + "%";
+
+    blue.style.top =
+        blueY + "%";
+
+
+    red.style.left =
+        redX + "%";
+
+    red.style.top =
+        redY + "%";
+
+}
+
+
+/* =====================================================
+   LIMITES
+===================================================== */
+
+function limit() {
+
+    blueX =
+        Math.max(2, Math.min(94, blueX));
+
+    blueY =
+        Math.max(2, Math.min(88, blueY));
+
+
+    redX =
+        Math.max(2, Math.min(94, redX));
+
+    redY =
+        Math.max(2, Math.min(88, redY));
+
+}
+
+
+/* =====================================================
+   TECLADO
+===================================================== */
+
+document.addEventListener("keydown", function(event) {
+
+    if (!playing || paused)
+        return;
+
+
+    const key =
+        event.key.toLowerCase();
+
+
+    /* AZUL */
+
+    if (key === "w")
+        blueY -= SPEED;
+
+    if (key === "s")
+        blueY += SPEED;
+
+    if (key === "a")
+        blueX -= SPEED;
+
+    if (key === "d")
+        blueX += SPEED;
+
+
+    /* VERMELHO */
+
+    if (event.key === "ArrowUp")
+        redY -= SPEED;
+
+    if (event.key === "ArrowDown")
+        redY += SPEED;
+
+    if (event.key === "ArrowLeft")
+        redX -= SPEED;
+
+    if (event.key === "ArrowRight")
+        redX += SPEED;
+
+
+    limit();
+
+    update();
+
+});
+
+
+/* =====================================================
+   DISTÂNCIA
+===================================================== */
+
+function distance() {
+
+    return Math.sqrt(
+
+        Math.pow(
+            blueX - redX,
+            2
+        )
+
+        +
+
+        Math.pow(
+            blueY - redY,
+            2
+        )
+
     );
 
-    if (distance < 13) {
+}
 
-        if (player === "blue") {
-            redHP -= 10;
-            redHealth.style.width = redHP + "%";
+
+/* =====================================================
+   SOCO
+===================================================== */
+
+function punch(player) {
+
+    if (!playing || paused)
+        return;
+
+
+    if (distance() > 14)
+        return;
+
+
+    /* ================= AZUL ================= */
+
+    if (player === "blue") {
+
+        redHP -= 10;
+
+
+        if (redHP < 0)
+            redHP = 0;
+
+
+        redHealth.style.width =
+            redHP + "%";
+
+
+        /*
+           EMPURRAR VERMELHO
+        */
+
+        let dx =
+            redX - blueX;
+
+        let dy =
+            redY - blueY;
+
+
+        let length =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        if (length > 0) {
+
+            dx /= length;
+            dy /= length;
+
         }
 
-        if (player === "red") {
-            blueHP -= 10;
-            blueHealth.style.width = blueHP + "%";
+
+        redX += dx * 10;
+        redY += dy * 5;
+
+    }
+
+
+    /* ================= VERMELHO ================= */
+
+    if (player === "red") {
+
+        blueHP -= 10;
+
+
+        if (blueHP < 0)
+            blueHP = 0;
+
+
+        blueHealth.style.width =
+            blueHP + "%";
+
+
+        /*
+           EMPURRAR AZUL
+        */
+
+        let dx =
+            blueX - redX;
+
+        let dy =
+            blueY - redY;
+
+
+        let length =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        if (length > 0) {
+
+            dx /= length;
+            dy /= length;
+
         }
 
-        verificarVencedor();
-    }
-}
 
-document.getElementById("blueAttack").onclick = () => {
-    attack("blue");
-};
+        blueX += dx * 10;
+        blueY += dy * 5;
 
-document.getElementById("redAttack").onclick = () => {
-    attack("red");
-};
-
-/* Limites da arena */
-
-function limitarPosicoes() {
-
-    blueX = Math.max(2, Math.min(94, blueX));
-    blueY = Math.max(2, Math.min(88, blueY));
-
-    redX = Math.max(2, Math.min(94, redX));
-    redY = Math.max(2, Math.min(88, redY));
-}
-
-/* Vitória */
-
-function verificarVencedor() {
-
-    if (blueHP <= 0) {
-        vencer("🔴 RED VENCEU!");
     }
 
-    if (redHP <= 0) {
-        vencer("🔵 BLUE VENCEU!");
-    }
+
+    limit();
+
+    update();
+
+    winner();
+
 }
 
-function vencer(texto) {
 
-    gameRunning = false;
+/* =====================================================
+   BOTÕES DE ATAQUE
+===================================================== */
 
-    message.innerText = texto;
-    message.style.display = "block";
+document.getElementById("blueAttack")
+.addEventListener("pointerdown", function(event) {
 
-    setTimeout(() => {
-        location.reload();
-    }, 3000);
-}
+    event.preventDefault();
 
-/* Joystick */
+    punch("blue");
 
-function criarJoystick(joystickID, player) {
+});
 
-    const joystick = document.getElementById(joystickID);
-    const stick = joystick.querySelector(".stick");
 
-    let ativo = false;
+document.getElementById("redAttack")
+.addEventListener("pointerdown", function(event) {
 
-    joystick.addEventListener("pointerdown", e => {
-        ativo = true;
-        joystick.setPointerCapture(e.pointerId);
-    });
+    event.preventDefault();
 
-    joystick.addEventListener("pointermove", e => {
+    punch("red");
 
-        if (!ativo || !gameRunning) return;
+});
 
-        const rect = joystick.getBoundingClientRect();
 
-        const centroX = rect.left + rect.width / 2;
-        const centroY = rect.top + rect.height / 2;
+/* =====================================================
+   JOYSTICK
+===================================================== */
 
-        let dx = e.clientX - centroX;
-        let dy = e.clientY - centroY;
+function createJoystick(id, player) {
 
-        const distancia = Math.sqrt(dx * dx + dy * dy);
-        const limite = 38;
+    const joystick =
+        document.getElementById(id);
 
-        if (distancia > limite) {
-            dx = dx / distancia * limite;
-            dy = dy / distancia * limite;
+    const stick =
+        joystick.querySelector(".stick");
+
+
+    let dragging = false;
+
+    let pointerID = null;
+
+
+    joystick.addEventListener(
+        "pointerdown",
+        function(event) {
+
+            if (!playing || paused)
+                return;
+
+
+            dragging = true;
+
+            pointerID =
+                event.pointerId;
+
+
+            joystick.setPointerCapture(
+                pointerID
+            );
+
+
+            move(event);
+
         }
+    );
+
+
+    joystick.addEventListener(
+        "pointermove",
+        function(event) {
+
+            if (!dragging)
+                return;
+
+
+            if (event.pointerId !== pointerID)
+                return;
+
+
+            if (paused)
+                return;
+
+
+            move(event);
+
+        }
+    );
+
+
+    joystick.addEventListener(
+        "pointerup",
+        release
+    );
+
+
+    joystick.addEventListener(
+        "pointercancel",
+        release
+    );
+
+
+    function release() {
+
+        dragging = false;
+
+        pointerID = null;
+
 
         stick.style.transform =
-            `translate(${dx}px, ${dy}px)`;
+            "translate(0,0)";
 
-        if (Math.abs(dx) > 10) {
-            if (player === "blue")
-                blueX += dx / 100;
+    }
 
-            if (player === "red")
-                redX += dx / 100;
+
+    function move(event) {
+
+        const rect =
+            joystick.getBoundingClientRect();
+
+
+        const centerX =
+            rect.left +
+            rect.width / 2;
+
+
+        const centerY =
+            rect.top +
+            rect.height / 2;
+
+
+        let dx =
+            event.clientX -
+            centerX;
+
+
+        let dy =
+            event.clientY -
+            centerY;
+
+
+        const dist =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
+            );
+
+
+        const max = 38;
+
+
+        if (dist > max) {
+
+            dx =
+                dx / dist * max;
+
+            dy =
+                dy / dist * max;
+
         }
 
-        if (Math.abs(dy) > 10) {
+
+        /*
+           Movimento visual
+        */
+
+        stick.style.transform =
+            "translate(" +
+            dx +
+            "px," +
+            dy +
+            "px)";
+
+
+        /*
+           Movimento do personagem
+        */
+
+        if (Math.abs(dx) > 3) {
+
             if (player === "blue")
-                blueY += dy / 100;
+                blueX +=
+                    (dx / max) *
+                    SPEED;
 
             if (player === "red")
-                redY += dy / 100;
+                redX +=
+                    (dx / max) *
+                    SPEED;
+
         }
 
-        limitarPosicoes();
-        updatePlayers();
-    });
 
-    joystick.addEventListener("pointerup
+        if (Math.abs(dy) > 3) {
+
+            if (player === "blue")
+                blueY +=
+                    (dy / max) *
+                    SPEED;
+
+            if (player === "red")
+                redY +=
+                    (dy / max) *
+                    SPEED;
+
+        }
+
+
+        limit();
+
+        update();
+
+    }
+
+}
+
+
+/* =====================================================
+   CRIAR JOYSTICKS
+===================================================== */
+
+createJoystick(
+    "blueJoystick",
+    "blue"
+);
+
+
+createJoystick(
+    "redJoystick",
+    "red"
+);
+
+
+/* =====================================================
+   VENCEDOR
+===================================================== */
+
+function winner() {
+
+    if (blueHP <= 0) {
+
+        playing = false;
+
+        message.textContent =
+            "🔴 RED VENCEU!";
+
+        message.style.display =
+            "block";
+
+    }
+
+
+    if (redHP <= 0) {
+
+        playing = false;
+
+        message.textContent =
+            "🔵 BLUE VENCEU!";
+
+        message.style.display =
+            "block";
+
+    }
+
+}
+
+
+/* =====================================================
+   INICIAL
+===================================================== */
+
+update();
+
+</script>
+
+</body>
+</html>
